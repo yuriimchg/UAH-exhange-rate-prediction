@@ -1,5 +1,8 @@
 __pycache__
 *.pyc
+.ipynb_checkpoints/
+
 # Virtual environment
 ex_rate
 venv
+
