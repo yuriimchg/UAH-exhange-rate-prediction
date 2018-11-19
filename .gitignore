@@ -1,8 +1,3 @@
-__pycache__
-*.pyc
+.idea/
+venv/
 .ipynb_checkpoints/
-
-# Virtual environment
-ex_rate
-venv
-
