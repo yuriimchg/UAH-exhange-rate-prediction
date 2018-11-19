@@ -26,7 +26,7 @@ class ExchangeParser(NBUParser):
     def parse_exchange(self):
         
         json_data = self.get_json()
-       # print(json_data)
+        print(json_data)
 
 
 class GrossExtDebtParser(NBUParser):
