@@ -21,7 +21,7 @@ class Exchange(Base):
 
     def __repr__(self):
         return f'<Exchange(r030={self.r030}, txt={self.txt}, ' \
-               f'rate={self.rate}, cc={self.cc}, exchangedate={self.sexchangedate})'
+               f'rate={self.rate}, cc={self.cc}, exchangedate={self.sexchangedate})>'
 
 
 class Monetary(Base):
@@ -35,6 +35,11 @@ class Monetary(Base):
     m2_aggregate = Column(Float)  # id_api = M2 == M1 + deposits in $
     m3_aggregate = Column(Float)  # id_api = M3 == M2 + securities
 
+    def __repr__(self):
+        return f'<Monetary(dt={self.dt}, freq={self.freq}, m0_cash={self.m0_cash}, ' \
+               f'm1_aggregate={self.m1_aggregate}, m2_aggregate={self.m2_aggregate}, m3_aggregate={self.m3_aggregate})>'
+
+
 class BanksIncomesExpenses(Base):
     """https://bank.gov.ua/NBUStatService/v1/statdirectory/banksincexp?date=20090201&period=m&json"""
     tablename = 'banksincexp'
@@ -45,6 +50,29 @@ class BanksIncomesExpenses(Base):
     total_expense = Column(Float) # id_api = BS2_ExpensesTotal
     income_tax = Column(Float) # id_api = BS2_ExpTaxIncome
     net_profit = Column(Float) # id_api = BS2_NetProfitLoss
+
+    def __repr__(self):
+        return f'<BanksIncExp(dt={self.dt}, freq={self.freq}, total_income={self.total_income}, total_expense=' \
+               f'{self.total_expense}, income_tax={self.income_tax}, net_profit={self.net_profit})>'
+
+
+class Investment(Base):
+    """https://bank.gov.ua/NBUStatService/v1/statdirectory/interinvestpos?date=200301&s181=Total&json"""
+    __tablename__ = 'interinvest'
+    id = Column(Integer, primary_key=True)
+    dt = Column(DateTime, default=datetime.utcnow)
+    freq = Column(String(1), default='Q')
+    assets = Column(Float) # id_api = IIP_A, s181 = Total
+    net_inv_pos = Column(Float) # id_api = IIP_Net, s181 = Total
+    direct_inv = Column(Float) # id_api = FDI_A, s181 = Total
+
+    def __repr__(self):
+        return f'<InterInvest(dt={self.dt}, freq={self.freq}, assets={self.assets},' \
+               f' net_inv_pos={self.net_inv_pos}, direct_inv={self.direct_inv})>'
+
+
+
+
 
 
 
