@@ -3,9 +3,8 @@ from sqlalchemy import Column, Integer, String, DateTime, Float
 from sqlalchemy_utils import database_exists, create_database
 from datetime import datetime
 
-
-#TODO: Create database with tables. Every table will be exported later as csv
 Base = declarative_base()
+
 
 class Exchange(Base):
     """ Create table for exchange rates
@@ -17,7 +16,7 @@ class Exchange(Base):
     r030 = Column(Integer)
     txt = Column(String)
     rate = Column(Float)
-    сс = Column(String(3))
+    cc = Column(String(3))
 
     def __repr__(self):
         return f'<Exchange(r030={self.r030}, txt={self.txt}, ' \
@@ -25,7 +24,7 @@ class Exchange(Base):
 
 
 class Monetary(Base):
-    """  https://bank.gov.ua/NBUStatService/v1/statdirectory/monetary?sort=ind&order=asc&k076=Total&date=20030201&json"""
+    """ https://bank.gov.ua/NBUStatService/v1/statdirectory/monetary?sort=ind&order=asc&k076=Total&date=20030201&json"""
     __tablename__ = 'monetary'
     id = Column(Integer, primary_key=True)
     dt = Column(DateTime, default=datetime.utcnow)
@@ -46,10 +45,10 @@ class BanksIncomesExpenses(Base):
     id = Column(Integer, primary_key=True)
     dt = Column(DateTime, default=datetime.utcnow)
     freq = Column(String(1), default='M')
-    total_income = Column(Float) # id_api = BS2_IncomeTotal
-    total_expense = Column(Float) # id_api = BS2_ExpensesTotal
-    income_tax = Column(Float) # id_api = BS2_ExpTaxIncome
-    net_profit = Column(Float) # id_api = BS2_NetProfitLoss
+    total_income = Column(Float)  # id_api = BS2_IncomeTotal
+    total_expense = Column(Float)  # id_api = BS2_ExpensesTotal
+    income_tax = Column(Float)  # id_api = BS2_ExpTaxIncome
+    net_profit = Column(Float)  # id_api = BS2_NetProfitLoss
 
     def __repr__(self):
         return f'<BanksIncExp(dt={self.dt}, freq={self.freq}, total_income={self.total_income}, total_expense=' \
@@ -62,13 +61,71 @@ class Investment(Base):
     id = Column(Integer, primary_key=True)
     dt = Column(DateTime, default=datetime.utcnow)
     freq = Column(String(1), default='Q')
-    assets = Column(Float) # id_api = IIP_A, s181 = Total
-    net_inv_pos = Column(Float) # id_api = IIP_Net, s181 = Total
-    direct_inv = Column(Float) # id_api = FDI_A, s181 = Total
+    assets = Column(Float)  # id_api = IIP_A, s181 = Total
+    net_inv_pos = Column(Float)  # id_api = IIP_Net, s181 = Total
+    direct_inv = Column(Float)  # id_api = FDI_A, s181 = Total
 
     def __repr__(self):
         return f'<InterInvest(dt={self.dt}, freq={self.freq}, assets={self.assets},' \
                f' net_inv_pos={self.net_inv_pos}, direct_inv={self.direct_inv})>'
+
+
+class GrossExtDebt(Base):
+    """https://bank.gov.ua/NBUStatService/v1/statdirectory/grossextdebt?date=200401&id_api=ed&json"""
+    __tablename__ = 'grossextdebt'
+    id = Column(Integer, primary_key=True)
+    dt = Column(DateTime, default=datetime.utcnow)
+    freq = Column(String(1), default='Q')
+    grossextdebt = Column(Float)  # id_api=ED
+
+    def __repr__(self):
+        return f'<GrossExtDebt(dt={self.dt}, freq={self.freq}, grossextdebt={self.grossextdebt})>'
+
+
+class Inflation(Base):
+    """"""
+    __tablename__ = 'inflation'
+    id = Column(Integer, primary_key=True)
+    dt = Column(DateTime, default=datetime.utcnow)
+    freq = Column(String(1), default='M')
+    ku = Column(String(5))
+    tzep = Column(String(5))
+    price_cpi = Column(Float)  # id_api = prices_price_cpi, mcrd081=Total -- Consumer price index
+    price_ci = Column(Float)    # id_api = prices_price_ci, mcrd081=Total -- Core inflation
+
+    def __repr__(self):
+        return f'<Inflation(dt={self.dt}, freq={self.freq}, ku={self.ku}, tzep={self.tzep}' \
+               f'price_cpi={self.price_cpi}, price_ci={self.price_ci})>'
+
+
+class EconomicActivity(Base):
+    """https://bank.gov.ua/NBUStatService/v1/statdirectory/economicactivity?period=m&id_api=ea_trade_rte&date=201504&json"""
+    __tablename__ = 'economicactivity'
+    id = Column(Integer, primary_key=True)
+    dt = Column(DateTime, default=datetime.utcnow)
+    freq = Column(String(1), default='M')
+    gross_dom_prod = Column(Float)
+    gross_surplus = Column(Float)
+    employee_compensation = Column(Float)  # id_api = ea_gdp_is_emp_comp & tzep = F_& mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
+    gross_val_added = Column(Float)  # id_api = ea_gdp_ps_gv_add & tzep = F_& "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
+    gross_surplus_mixed_inc = Column(Float)  #  id_api = ea_gdp_is_gross_surplus & tzep = F_& "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
+    gross_fixed_cap_form = Column(Float)  #  id_api = ea_gdp_es_gfcf & tzep = F_& "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
+    net_export = Column(Float) #id_api = ea_gdp_es_net_exp & tzep = F_ & "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
+    exports = Column(Float)  # id_api = ea_gdp_es_net_egs  & "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
+    imports = Column(Float)  # id_api = ea_gdp_es_igs  & "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
+    gross_cap_form = Column(Float)  # id_api = ea_gdp_es_gf &  & "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
+
+    def __repr__(self):
+        return f'<EconomicActivity(dt={self.dt}, freq={self.freq}, gross_dom_prod={self.gross_dom_prod},' \
+               f' gross_surplus={self.gross_surplus}, employee_compensation={self. employee_compensation}, ' \
+               f'gross_val_added={self.gross_val_added}, gross_surplus_mixed_inc={self.gross_surplus_mixed_inc}, ' \
+               f'gross_fixed_cap_form={self.gross_fixed_cap_form}, net_export={self.net_export}, ' \
+               f'exports={self.exports}, imports={self.imports}, exports={self.exports},' \
+               f'gross_cap_form={self.gross_cap_form})>'
+
+
+
+
 
 
 
