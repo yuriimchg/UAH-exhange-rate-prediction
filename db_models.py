@@ -103,7 +103,7 @@ class EconomicActivity(Base):
     __tablename__ = 'economicactivity'
     id = Column(Integer, primary_key=True)
     dt = Column(DateTime, default=datetime.utcnow)
-    freq = Column(String(1), default='M')
+    freq = Column(String(1), default='Q')
     gross_dom_prod = Column(Float)
     gross_surplus = Column(Float)
     employee_compensation = Column(Float)  # id_api = ea_gdp_is_emp_comp & tzep = F_& mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
@@ -124,6 +124,41 @@ class EconomicActivity(Base):
                f'gross_cap_form={self.gross_cap_form})>'
 
 
+class Budget(Base):
+    """https://bank.gov.ua/NBUStatService/v1/statdirectory/budget?period=m&date=201512&json"""
+    __tablename__ = 'budget'
+
+    id = Column(Integer, primary_key=True)
+    dt = Column(DateTime, default=datetime.utcnow)
+    freq = Column(String(1), default='M')
+    expenses = Column(Float)  # id_api = gf_budgetee_total & mcr200p=CBU &
+    borrowed = Column(Float)  # id_api = gf_budgtfd_401000 & mcr200p=CBU
+    tax_revenue = Column(Float)  # id_api = gf_budgtr_10000000 & mcr200p=CBU
+    gifts = Column(Float) #id_api = gf_budgtr_42000000 & mcr200p=CBU
+    total_revenue = Column(Float)  # id_api = gf_budgtr_Total_1 & mcr200p=CBU
+    total_budget = Column(Float)  # id_api = gf_budgtfd_total & mcr200p=CBU
+
+    def __repr__(self):
+        return f'<Budget(dt={self.dt}, freq={self.freq}, expenses={self.expenses},' \
+               f'borrowed={self.borrowed}, tax_revenue={self.tax_revenue}, ' \
+               f'gifts={self.gifts}, total_revenue={self.total_revenue}, ' \
+               f'total_budget={self.total_budget})>'
+
+
+class Res(Base):
+    """https://bank.gov.ua/NBUStatService/v1/statdirectory/res?date=201708&json"""
+    __tablename__ = 'res'
+
+    id = Column(Integer, primary_key=True)
+    dt = Column(DateTime, default=datetime.utcnow)
+    freq = Column(String(1), default='M')
+    imf_res_pos = Column(Float) # id_api = RES_IMFResPosition
+    off_res_assets = Column(Float)  # id_api = RES_OffReserveAssets
+    foreign_cur_res = Column(Float)  # id_api = RES_ForCurrencyAssets
+
+    def __repr__(self):
+        return f'<Res(dt={self.dt}, freq={self.freq},imf_res_pos={self.imf_res_pos},' \
+               f' off_res_assets={self.off_res_assets},foreign_cur_res={self.foreign_cur_res})>'
 
 
 
