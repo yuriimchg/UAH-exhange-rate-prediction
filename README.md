@@ -15,9 +15,10 @@ Open the dir with terminal:
 
 Create and launch project virtual environment:
 
-`python3 -m venv venv`
+```python3 -m venv venv
 
-`source venv/bin/activate`
+source venv/bin/activate
+```
 
 Inside virtual environment install python dependencies:
 
