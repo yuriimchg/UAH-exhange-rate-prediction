@@ -1,15 +1,17 @@
 # TODO: Add Google Trands parser DAG
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
-from sqlalchemy_utils import database_exists, create_database
 from datetime import datetime, timedelta
 
 # Import tables
-from db_models import Exchange, Monetary, BanksIncomesExpenses, Investment, GrossExtDebt, Inflation
-from db_models import EconomicActivity, Budget, Res
+from db_models import Exchange, Monetary, BanksIncomesExpenses, Investment, GrossExtDebt
+from db_models import EconomicActivity, Budget, Res, Inflation
 
 # Import API parser
 from nbu_parser import ExchangeParser
+
+# Import database creating module
+from create_db import create_db
 
 ######################################################################
 # TODO Airflow DAG that has nodes:

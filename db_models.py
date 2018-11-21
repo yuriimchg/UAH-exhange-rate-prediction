@@ -19,7 +19,7 @@ class Exchange(Base):
 
     def __repr__(self):
         return f'<Exchange(r030={self.r030}, txt={self.txt}, ' \
-               f'rate={self.rate}, cc={self.cc}, exchangedate={self.sexchangedate})>'
+               f'rate={self.rate}, cc={self.cc}, exchangedate={self.exchangedate})>'
 
 
 class Monetary(Base):
@@ -40,7 +40,7 @@ class Monetary(Base):
 
 class BanksIncomesExpenses(Base):
     """https://bank.gov.ua/NBUStatService/v1/statdirectory/banksincexp?date=20090201&period=m&json"""
-    tablename = 'banksincexp'
+    __tablename__ = 'banksincexp'
     id = Column(Integer, primary_key=True)
     dt = Column(DateTime, default=datetime.utcnow)
     freq = Column(String(1), default='M')
