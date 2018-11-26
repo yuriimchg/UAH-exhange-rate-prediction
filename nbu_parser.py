@@ -4,29 +4,31 @@ import os
 
 class NBUParser:
 
-    def __init__(self, url_base, db_uri, date):
+    def __init__(self, url_base, page, date, suffix):
         self.url_base = url_base
-        self.db_uri = db_uri
+        self.page = page
         self.date = date
-
-
-class ExchangeParser(NBUParser):
-
-    def __init__(self, url_base, url_suffix, db_uri, date):
-        self.url_suffix = url_suffix
-        self.url_base = url_base
-        self.db_uri = db_uri
-        self.date = date
+        self.suffix = suffix
 
     def get_json(self):
-        url = os.path.join(self.url_base, self.url_suffix)
+        date = f'date={self.date}'
+        url = os.path.join(self.url_base, self.page) + f'?{date}{self.suffix}'
         response = requests.get(url)
         return response.json()
 
+class ExchangeParser(NBUParser):
+
+    def __init__(self, url_base, page, date, suffix):
+        super().__init__(url_base, page, date, suffix)
+        self.date = date
+        self.page = page
+
     def parse_exchange(self):
-        
         json_data = self.get_json()
-        print(json_data)
+        print(*json_data, sep='\n')
+
+base_url = "https://bank.gov.ua/NBUStatService/v1/statdirectory"
+print(ExchangeParser(base_url, 'exchange', '20181126', '&json').parse_exchange())
 
 
 class GrossExtDebtParser(NBUParser):
