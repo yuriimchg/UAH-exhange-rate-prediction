@@ -109,6 +109,30 @@ class EconomicActivityParser(NBUParser):
         print(json_data)
 
 
+class BudgetParser(NBUParser):
+
+    def __init__(self, base, date, params):
+        super().__init__(base, 'budget', date, params)
+        self.params = params
+        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+
+    def parse_budget(self):
+        json_data = self.get_json()
+        print(json_data)
+
+
+class ResParser(NBUParser):
+
+    def __init__(self, base, date, params):
+        super().__init__(base, 'res', date, params)
+        self.params = params
+        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+
+    def parse_activity(self):
+        json_data = self.get_json()
+        print(json_data)
+
+
 
 
 # TODO: Add as many classes, as required
@@ -120,4 +144,7 @@ print(ExchangeParser(base_url, '20181126').parse_exchange())  ###########
 # e = ExchangeParser('https://bank.gov.ua/NBUStatService/v1/statdirectory', 'exchange?date=20181116&json', 'joj', 'joj')
 #
 # print(e.parse_exchange())
+
+print(ResParser(base_url, '20181126', params={'id_api' : 'RES_IMFResPosition'}).parse_exchange()) 
+print(BudgetParser(base_url, '20181126', params={'id_api' : 'gf_budgtr_10000000', 'mcr200p' : 'CBU'}).parse_exchange()) 
 
