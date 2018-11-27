@@ -29,7 +29,8 @@ class ExchangeParser(NBUParser):
 
     def __init__(self, base, date):
         super().__init__(base, 'exchange', date, {}, 'json')
-        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.date,
+                             self.params, self.suffix).get_url()
 
     def parse_exchange(self):
         json_data = self.get_json()
@@ -41,7 +42,8 @@ class MonetaryParser(NBUParser):
     def __init__(self, base, date, params):
         super().__init__(base, 'monetary', date, params, 'json')
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.date,
+                             self.params, self.suffix).get_url()
 
 
     def parse_monetary(self):
@@ -54,7 +56,8 @@ class BanksIncExParser(NBUParser):
     def __init__(self, base, date, params):
         super().__init__(base, 'banksincexp', date, params, 'json')
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.date,
+                             self.params, self.suffix).get_url()
 
     def parse_banks(self):
         json_data = self.get_json()
@@ -66,7 +69,8 @@ class InvestmentParser(NBUParser):
     def __init__(self, base, date, params):
         super().__init__(base, 'interinvestpos', date, params, 'json')
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.date,
+                             self.params, self.suffix).get_url()
 
     def parse_investment(self):
         json_data = self.get_json()
@@ -78,7 +82,8 @@ class GrossExtDebtParser(NBUParser):
     def __init__(self, base, date, params):
         super().__init__(base, 'grossextdebt', date, params, 'json')
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.date,
+                             self.params, self.suffix).get_url()
 
     def parse_ged(self):
         json_data = self.get_json()
@@ -90,7 +95,8 @@ class InflationParser(NBUParser):
     def __init__(self, base, date, params):
         super().__init__(base, 'inflation', date, params)
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.date,
+                             self.params, self.suffix).get_url()
         
     def parse_inflation(self):
         json_data = self.get_json()
@@ -102,7 +108,8 @@ class EconomicActivityParser(NBUParser):
     def __init__(self, base, date, params):
         super().__init__(base, 'economicactivity', date, params)
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.date,
+                             self.params, self.suffix).get_url()
         
     def parse_activity(self):
         json_data = self.get_json()
@@ -114,11 +121,12 @@ class BudgetParser(NBUParser):
     def __init__(self, base, date, params):
         super().__init__(base, 'budget', date, params)
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.date,
+                             self.params, self.suffix).get_url()
 
     def parse_budget(self):
-        json_data = self.get_json()
-        print(json_data)
+        #json_data = self.get_json()
+        print(self.url)
 
 
 class ResParser(NBUParser):
@@ -126,7 +134,8 @@ class ResParser(NBUParser):
     def __init__(self, base, date, params):
         super().__init__(base, 'res', date, params)
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.date,
+                             self.params, self.suffix).get_url()
 
     def parse_res(self):
         json_data = self.get_json()
@@ -145,6 +154,8 @@ print(ExchangeParser(base_url, '20181126').parse_exchange())  ###########
 #
 # print(e.parse_exchange())
 
-print(ResParser(base_url, '20181126', params={'id_api' : 'RES_IMFResPosition'}).parse_budget()) 
-print(BudgetParser(base_url, '20181126', params={'id_api' : 'gf_budgtr_10000000', 'mcr200p' : 'CBU'}).parse_res()) 
+#print(ResParser(base_url, '20181126', params={'id_api' : 'RES_IMFResPosition'}).parse_res())
+print(BudgetParser(base_url, '20120101', params={'id_api' : 'gf_budgtr_10000000',
+                                                 'mcr200p' : 'CBU',
+                                                 'period' : 'm'}).parse_budget()) 
 
