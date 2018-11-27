@@ -128,7 +128,7 @@ class ResParser(NBUParser):
         self.params = params
         self.url = NBUParser(self.base, self.page, self.date, self.params, self.suffix).get_url()
 
-    def parse_activity(self):
+    def parse_res(self):
         json_data = self.get_json()
         print(json_data)
 
@@ -145,6 +145,6 @@ print(ExchangeParser(base_url, '20181126').parse_exchange())  ###########
 #
 # print(e.parse_exchange())
 
-print(ResParser(base_url, '20181126', params={'id_api' : 'RES_IMFResPosition'}).parse_exchange()) 
-print(BudgetParser(base_url, '20181126', params={'id_api' : 'gf_budgtr_10000000', 'mcr200p' : 'CBU'}).parse_exchange()) 
+print(ResParser(base_url, '20181126', params={'id_api' : 'RES_IMFResPosition'}).parse_budget()) 
+print(BudgetParser(base_url, '20181126', params={'id_api' : 'gf_budgtr_10000000', 'mcr200p' : 'CBU'}).parse_res()) 
 
