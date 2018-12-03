@@ -1,6 +1,6 @@
 import requests
-import json
 import os
+from app import app
 
 
 class NBUParser:
