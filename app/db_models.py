@@ -1,6 +1,9 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, Float
+from sqlalchemy import Column, Integer, String, DateTime, Float, create_engine
+from sqlalchemy_utils import database_exists, create_database
 from datetime import datetime
+
+from app.configs.app_config import SQLALCHEMY_DATABASE_URI
 
 Base = declarative_base()
 
@@ -160,14 +163,14 @@ class Res(Base):
                f' off_res_assets={self.off_res_assets},foreign_cur_res={self.foreign_cur_res})>'
 
 
+def create_db(db_uri=SQLALCHEMY_DATABASE_URI):
+    """ Create new database if it does not exist """
+    assert not database_exists(db_uri)
+    create_database(db_uri, encoding='utf8')
+    return f'{db_uri} was successfully created'
 
 
-
-
-
-
-
-
-
-
-
+def create_tables(db_uri = SQLALCHEMY_DATABASE_URI):
+    engine = create_engine(db_uri, echo=True)
+    Base.metadata.create_all(bind=engine)
+    return f'All tables in {db_uri} were successfully created'

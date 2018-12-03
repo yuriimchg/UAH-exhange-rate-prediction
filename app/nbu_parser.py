@@ -1,53 +1,67 @@
 import requests
 import os
-from app import app
+from app import app, db
+
+from app.db_models import Exchange, Monetary, BanksIncomesExpenses, Investment, GrossExtDebt
+from app.db_models import EconomicActivity, Budget, Res, Inflation
 
 
 class NBUParser:
     """ Base class for parsing bank.gov.ua API """
 
-    def __init__(self, base, page, date, params={}, suffix='json'):
+    def __init__(self, base, page, start_date, params={}, suffix='json'):
         self.base = base
         self.page = page
-        self.date = date
+        self.start_date = start_date
         self.params = params
         self.suffix = suffix
 
-    def get_url(self):
-        date = f'date={self.date}'
+    def get_url(self, date):
         base_url = os.path.join(self.base, self.page)
         params_str = '&'.join([f'{k}={v}' for k, v in self.params.items()])
         return base_url + f'?{date}&{params_str}&{self.suffix}'
 
-    def get_json(self):
+    def get_json(self, date):
         """ Get json data from the requested URL"""
-        response = requests.get(self.get_url())
+        response = requests.get(self.get_url(date))
         return response.json()
 
 
 class ExchangeParser(NBUParser):
 
-    def __init__(self, base, date):
-        super().__init__(base, 'exchange', date, {}, 'json')
-        self.url = NBUParser(self.base, self.page, self.date,
-                             self.params, self.suffix).get_url()
+    def __init__(self, base):
+        super().__init__(base, 'exchange', '19980101', {}, 'json')
 
-    def parse_exchange(self):
-        json_data = self.get_json()
-        print(*json_data, sep='\n')
+        self.url = NBUParser(self.base, self.page,
+                             self.start_date, self.params,
+                             self.suffix).get_url(self.start_date)
+
+    def add_exchanges_to_db(self, date):
+        json_data = self.get_json(date)
+        for currency in json_data:
+            cur = Exchange(
+                r030=currency['r030'],
+                exchangedate=currency['exchangedate'],
+                txt=currency['txt'],
+                rate=currency['rate'],
+                cc=currency['cc'])
+            db.session.add(cur)
+            db.session.commit()
+        return f'Added exchange rates for {date} to database'
 
 
 class MonetaryParser(NBUParser):
 
-    def __init__(self, base, date, params):
-        super().__init__(base, 'monetary', date, params, 'json')
+    def __init__(self, base, params):
+        super().__init__(base, 'monetary', '20030201', params, 'json')
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date,
-                             self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page,
+                             self.start_date, self.params,
+                             self.suffix).get_url(self.start_date)
 
-    def parse_monetary(self):
-        json_data = self.get_json()
-        print(json_data)
+    def add_monetary_to_db(self, date):
+        json_data = self.get_json(date)
+
 
 
 class BanksIncExParser(NBUParser):
@@ -145,8 +159,8 @@ class ResParser(NBUParser):
 
 # TODO: Add as many classes, as required
 
-# base_url = "https://bank.gov.ua/NBUStatService/v1/statdirectory"  ###########
-# print(ExchangeParser(base_url, '20181126').parse_exchange())  ###########
+base_url = "https://bank.gov.ua/NBUStatService/v1/statdirectory"  ###########
+print(ExchangeParser(base_url, '20181126').parse_exchange())  ###########
 # # print(NBUParser(base_url, 'grossextdebt', '200401', {'id_api':'ed'}))   ########################
 # # print(NBUParser(base_url, 'exchange', '200401'))        ########################################
 # e = ExchangeParser('https://bank.gov.ua/NBUStatService/v1/statdirectory', 'exchange?date=20181116&json', 'joj', 'joj')
