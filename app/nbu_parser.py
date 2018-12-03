@@ -45,7 +45,6 @@ class MonetaryParser(NBUParser):
         self.url = NBUParser(self.base, self.page, self.date,
                              self.params, self.suffix).get_url()
 
-
     def parse_monetary(self):
         json_data = self.get_json()
         print(json_data)
@@ -146,16 +145,16 @@ class ResParser(NBUParser):
 
 # TODO: Add as many classes, as required
 
-base_url = "https://bank.gov.ua/NBUStatService/v1/statdirectory"  ###########
-print(ExchangeParser(base_url, '20181126').parse_exchange())  ###########
-# print(NBUParser(base_url, 'grossextdebt', '200401', {'id_api':'ed'}))   ########################
-# print(NBUParser(base_url, 'exchange', '200401'))        ########################################
+# base_url = "https://bank.gov.ua/NBUStatService/v1/statdirectory"  ###########
+# print(ExchangeParser(base_url, '20181126').parse_exchange())  ###########
+# # print(NBUParser(base_url, 'grossextdebt', '200401', {'id_api':'ed'}))   ########################
+# # print(NBUParser(base_url, 'exchange', '200401'))        ########################################
 # e = ExchangeParser('https://bank.gov.ua/NBUStatService/v1/statdirectory', 'exchange?date=20181116&json', 'joj', 'joj')
+# #
+# # print(e.parse_exchange())
 #
-# print(e.parse_exchange())
-
-#print(ResParser(base_url, '20181126', params={'id_api' : 'RES_IMFResPosition'}).parse_res())
-print(BudgetParser(base_url, '20120101', params={'id_api' : 'gf_budgtr_10000000',
-                                                 'mcr200p' : 'CBU',
-                                                 'period' : 'm'}).parse_budget()) 
-
+# #print(ResParser(base_url, '20181126', params={'id_api' : 'RES_IMFResPosition'}).parse_res())
+# print(BudgetParser(base_url, '20120101', params={'id_api' : 'gf_budgtr_10000000',
+#                                                  'mcr200p' : 'CBU',
+#                                                  'period' : 'm'}).parse_budget())
+#

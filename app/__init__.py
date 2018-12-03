@@ -4,8 +4,8 @@ from app.configs import app_config
 from flask_migrate import Migrate
 
 app = Flask(__name__)
+app.config.from_pyfile('configs/app_config.py', silent=False)
 db = SQLAlchemy(app)
-app.config.from_object(app_config)
 migrate = Migrate(app, db)
 
 # Imports

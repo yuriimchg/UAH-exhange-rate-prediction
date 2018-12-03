@@ -1,7 +1,11 @@
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+
 DB_CONFIG_DICT = {'user' : 'yurii',
                   'password' : 'asreliableas12345',
                   'host' : 'localhost',
-                  'port' : '5434'}
-SQLALCHEMY_DB_URI = 'psycopg2+postgresql://{}:{}@{}:{}'.format(*DB_CONFIG_DICT.values())
+                  'port' : '5432'}
+SQLALCHEMY_DATABASE_URI = 'postgres+psycopg2://{}:{}@{}:{}'.format(*DB_CONFIG_DICT.values())
 
-print(SQLALCHEMY_DB_URI)
+SQLALCHEMY_TRACK_MODIFICATIONS = False
