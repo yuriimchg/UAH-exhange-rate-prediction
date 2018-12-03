@@ -1,7 +1,8 @@
-from app.nbu_parser import ExchangeParser, base_url
+from app.nbu_parser import ExchangeParser
 from datetime import datetime
 
-parser = ExchangeParser(base_url, '20110401')
+base = "https://bank.gov.ua/NBUStatService/v1/statdirectory"
+parser = ExchangeParser(base, '20110401')
 
 def test_exchange_url_ok():
     assert parser.get_url() == 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=20110401&&json'
