@@ -61,6 +61,18 @@ class MonetaryParser(NBUParser):
 
     def add_monetary_to_db(self, date):
         json_data = self.get_json(date)
+        one_day_monetary = Monetary(
+            dt=date,
+            m0_cash=filter(lambda x: x['id_api'] == 'M0', json_data),
+            m1_aggregate=filter(lambda x: x['id_api'] == 'M1', json_data),
+            m2_aggregate=filter(lambda x: x['id_api'] == 'M2', json_data),
+            m3_aggregate=filter(lambda x: x['id_api'] == 'M3', json_data)
+        )
+        db.session.add(one_day_monetary)
+        db.session.commit()
+        return f'Added monetary for {date} to database'
+
+
 
 
 
