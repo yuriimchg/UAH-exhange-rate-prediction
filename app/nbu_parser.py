@@ -5,6 +5,7 @@ from app import app, db
 from app.db_models import Exchange, Monetary, BanksIncomesExpenses, Investment, GrossExtDebt
 from app.db_models import EconomicActivity, Budget, Res, Inflation
 
+# TODO: add params to class instances
 
 class NBUParser:
     """ Base class for parsing bank.gov.ua API """
@@ -66,28 +67,32 @@ class MonetaryParser(NBUParser):
             m0_cash=filter(lambda x: x['id_api'] == 'M0', json_data),
             m1_aggregate=filter(lambda x: x['id_api'] == 'M1', json_data),
             m2_aggregate=filter(lambda x: x['id_api'] == 'M2', json_data),
-            m3_aggregate=filter(lambda x: x['id_api'] == 'M3', json_data)
-        )
+            m3_aggregate=filter(lambda x: x['id_api'] == 'M3', json_data))
         db.session.add(one_day_monetary)
         db.session.commit()
         return f'Added monetary for {date} to database'
 
 
-
-
-
 class BanksIncExParser(NBUParser):
 
-    def __init__(self, base, date, params):
-        super().__init__(base, 'banksincexp', date, params, 'json')
+    def __init__(self, base, params):
+        super().__init__(base, 'banksincexp', '20090201', params, 'json')
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date,
+        self.url = NBUParser(self.base, self.page, self.start_date,
                              self.params, self.suffix).get_url()
 
-    def parse_banks(self):
-        json_data = self.get_json()
-        print(json_data)
-
+    def parse_banks(self, date):
+        json_data = self.get_json(date)
+        one_day_balance = BanksIncomesExpenses(
+            dt=date,
+            total_income=filter(lambda x: x['id_api'] == 'BS2_IncomeTotal', json_data),
+            total_expense=filter(lambda x: x['id_api'] == 'BS2_ExpensesTotal', json_data),
+            income_tax=filter(lambda x: x['id_api'] == 'BS2_ExpTaxIncome', json_data),
+            net_profit=filter(lambda x: x['id_api'] == 'BS2_NetProfitLoss', json_data)
+        )
+        db.session.add(one_day_balance)
+        db.session.commit()
+        return f'Added one day banks incomes and expences for {date} to database'
 
 class InvestmentParser(NBUParser):
 
