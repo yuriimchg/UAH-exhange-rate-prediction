@@ -84,16 +84,31 @@ class GrossExtDebt(Base):
         return f'<GrossExtDebt(dt={self.dt}, freq={self.freq}, grossextdebt={self.grossextdebt})>'
 
 
-class Inflation(Base):
-    """"""
-    __tablename__ = 'inflation'
+class CoreInflation(Base):
+    """https://bank.gov.ua/NBUStatService/v1/statdirectory/inflation?date=20100201&id_api=prices_price_cpi_&mcrd081=Total&period=m&json"""
+    __tablename__ = 'core_inflation'
+    id = Column(Integer, primary_key=True)
+    dt = Column(DateTime, default=datetime.utcnow)
+    freq = Column(String(1), default='M')
+    consumer_price_index_dtpy = Column(Float)
+    consumer_price_index_pcpm = Column(Float)    # id_api = prices_price_ci_, mcrd081=Total -- Core inflation
+    consumer_price_index_pccm = Column(Float)
+    consumer_price_index_pccp = Column(Float)
+
+    def __repr__(self):
+        return f'<CoreInflation(dt={self.dt}, freq={self.freq}, ku={self.ku}, tzep={self.tzep}' \
+               f'price_cpi={self.price_cpi}, price_ci={self.price_ci})>'
+
+
+class ConsumerPriceIndices(Base):
+    """https://bank.gov.ua/NBUStatService/v1/statdirectory/inflation?date=20070201&id_api=prices_price_cpi_&mcrd081=Total&period=m&json"""
+    __tablename__ = 'consumer_price_indices'
     id = Column(Integer, primary_key=True)
     dt = Column(DateTime, default=datetime.utcnow)
     freq = Column(String(1), default='M')
     ku = Column(String(5))
     tzep = Column(String(5))
-    price_cpi = Column(Float)  # id_api = prices_price_cpi, mcrd081=Total -- Consumer price index
-    price_ci = Column(Float)    # id_api = prices_price_ci, mcrd081=Total -- Core inflation
+    price_cpi = Column(Float)    # id_api = prices_price_cpi_, mcrd081=Total -- Core inflation
 
     def __repr__(self):
         return f'<Inflation(dt={self.dt}, freq={self.freq}, ku={self.ku}, tzep={self.tzep}' \
