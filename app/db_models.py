@@ -123,14 +123,14 @@ class EconomicActivity(Base):
     freq = Column(String(1), default='Q')
     gross_dom_prod = Column(Float)
     gross_surplus = Column(Float)
-    employee_compensation = Column(Float)  # id_api = ea_gdp_is_emp_comp & tzep = F_& mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
-    gross_val_added = Column(Float)  # id_api = ea_gdp_ps_gv_add & tzep = F_& "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
-    gross_surplus_mixed_inc = Column(Float)  #  id_api = ea_gdp_is_gross_surplus & tzep = F_& "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
-    gross_fixed_cap_form = Column(Float)  #  id_api = ea_gdp_es_gfcf & tzep = F_& "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
-    net_export = Column(Float) #id_api = ea_gdp_es_net_exp & tzep = F_ & "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
-    exports = Column(Float)  # id_api = ea_gdp_es_net_egs  & "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
-    imports = Column(Float)  # id_api = ea_gdp_es_igs  & "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
-    gross_cap_form = Column(Float)  # id_api = ea_gdp_es_gf &  & "mcr210i": "TOTAL" & "mcrk110": "Total" & tzep=F_
+    employee_compensation = Column(Float)  # id_api = ea_gdp_is_emp_comp & tzep = F_& mcr210i": "TOTAL" & "mcrk110": "Total"
+    gross_val_added = Column(Float)  # id_api = ea_gdp_ps_gv_add & tzep = F_& "mcr210i": "TOTAL" & "mcrk110": "Total"
+    gross_surplus_mixed_inc = Column(Float)  #  id_api = ea_gdp_is_gross_surplus & tzep = F_& "mcr210i": "TOTAL" & "mcrk110": "Total"
+    gross_fixed_cap_form = Column(Float)  #  id_api = ea_gdp_es_gfcf & tzep = F_& "mcr210i": "TOTAL" & "mcrk110": "Total"
+    net_export = Column(Float) #id_api = ea_gdp_es_net_exp & tzep = F_ & "mcr210i": "TOTAL" & "mcrk110": "Total"
+    exports = Column(Float)  # id_api = ea_gdp_es_net_egs  & "mcr210i": "TOTAL" & "mcrk110": "Total"
+    imports = Column(Float)  # id_api = ea_gdp_es_igs  & "mcr210i": "TOTAL" & "mcrk110": "Total"
+    gross_cap_form = Column(Float)  # id_api = ea_gdp_es_gf &  & "mcr210i": "TOTAL" & "mcrk110": "Total"
 
     def __repr__(self):
         return f'<EconomicActivity(dt={self.dt}, freq={self.freq}, gross_dom_prod={self.gross_dom_prod},' \

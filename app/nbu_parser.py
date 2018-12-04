@@ -184,7 +184,7 @@ class CoreInflationParser(NBUParser):
 class CPIParser(NBUParser):
 
     def __init__(self, base, params):
-        super().__init__(base, 'inflation', '20080201', params)
+        super().__init__(base, 'inflation', '20070201', params)
         self.params = params
         self.url = NBUParser(self.base, self.page, self.start_date,
                              self.params, self.suffix).get_url(self.start_date)
@@ -205,42 +205,75 @@ class CPIParser(NBUParser):
 class EconomicActivityParser(NBUParser):
     
     def __init__(self, base, params):
-        super().__init__(base, 'economicactivity', '', params)
+        super().__init__(base, 'economicactivity', '20100201', params)
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date,
-                             self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.start_date,
+                             self.params, self.suffix).get_url(self.start_date)
         
-    def parse_activity(self):
-        json_data = self.get_json()
-        print(json_data)
+    def parse_activity(self, date):
+        json_data = self.get_json(date)
+        filtered_args = {'tzep': 'F_', 'mcr210i': 'TOTAL', 'mcrk110': 'Total'}
+        activity = EconomicActivity(
+            dt=datetime.strptime(date, '%Y%m%d'),
+            gross_dom_prod=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_ps_gdp_cp'}),
+            gross_surplus=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_is_gross_surplus'}),
+            employee_compensation=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_is_emp_comp'}),
+            gross_val_added=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_ps_gv_add'}),
+            gross_surplus_mixed_inc=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_is_gross_surplus'}),
+            gross_fixed_cap_form=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_es_gfcf'}),
+            net_export=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_es_net_exp'}),
+            exports=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_es_net_egs'}),
+            imports=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_es_igs'}),
+            gross_cap_form=self.filter_by_params(json_data, {**filtered_args, 'id_api': 'ea_gdp_es_gf'}),
+        )
+        db.session.add(activity)
+        db.session.commit()
+        return f'Added to database economic activity data for {date}'
 
 
 class BudgetParser(NBUParser):
 
-    def __init__(self, base, date, params):
-        super().__init__(base, 'budget', date, params)
+    def __init__(self, base, params):
+        super().__init__(base, 'budget', '20100201', params)
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date,
-                             self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.start_date,
+                             self.params, self.suffix).get_url(self.start_date)
 
-    def parse_budget(self):
-        #json_data = self.get_json()
-        print(self.url)
+    def parse_budget(self, date):
+        json_data = self.get_json(date)
+        budget = Budget(
+            dt=datetime.strptime(date, '%Y%m%d'),
+            expenses = self.filter_by_params(json_data, {'id_api': 'gf_budgetee_total', 'mcr200p': 'CBU'}),
+            borrowed = self.filter_by_params(json_data, {'id_api': 'gf_budgtfd_401000', 'mcr200p': 'CBU'}),
+            tax_revenue = self.filter_by_params(json_data, {'id_api': 'gf_budgtr_10000000', 'mcr200p': 'CBU'}),
+            gifts = self.filter_by_params(json_data, {'id_api': 'gf_budgtr_42000000', 'mcr200p': 'CBU'}),
+            total_revenue = self.filter_by_params(json_data, {'id_api': 'gf_budgtr_Total_1', 'mcr200p': 'CBU'}),
+            total_budget = self.filter_by_params(json_data, {'id_api': 'gf_budgtfd_total', 'mcr200p': 'CBU'}),
+        )
+        db.session.add(budget)
+        db.session.commit()
+        return f'Added budget data for {date} to database'
 
 
 class ResParser(NBUParser):
 
-    def __init__(self, base, date, params):
-        super().__init__(base, 'res', date, params)
+    def __init__(self, base, params):
+        super().__init__(base, 'res', '20030201', params)
         self.params = params
-        self.url = NBUParser(self.base, self.page, self.date,
-                             self.params, self.suffix).get_url()
+        self.url = NBUParser(self.base, self.page, self.start_date,
+                             self.params, self.suffix).get_url(self.date)
 
-    def parse_res(self):
-        json_data = self.get_json()
-        print(json_data)
-
-
+    def parse_res(self, date):
+        json_data = self.get_json(date)
+        res = Res(
+            dt=datetime.strptime(date, '%Y%m%d'),
+            imf_res_pos = self.filter_by_params(json_data, {'id_api': 'RES_IMFResPosition'}),
+            off_res_assets = self.filter_by_params(json_data, {'id_api': 'RES_OffReserveAssets'}),
+            foreign_cur_res = self.filter_by_params(json_data, {'id_api': 'RES_ForCurrencyAssets'}),
+        )
+        db.session.add(res)
+        db.session.commit()
+        return f'Added resource data for {date} to database'
 
 
 # TODO: Add as many classes, as required
