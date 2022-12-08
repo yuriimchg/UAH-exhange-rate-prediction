@@ -6,7 +6,7 @@ backcall==0.1.0
 billiard==3.5.0.4
 bleach==2.1.2
 celery==4.1.1
-certifi==2018.10.15
+certifi==2022.12.7
 chardet==3.0.4
 Click==7.0
 colorama==0.4.0
